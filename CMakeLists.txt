@@ -42,7 +42,8 @@ add_library(onvifcomm SHARED onvifcomm.cpp ${ProxyOBJ} ${PluginOBJ} ${Onvifobj})
 target_link_libraries(onvifcomm crypto avcodec avformat avutil swscale)
 add_executable(client main.cpp ${ProxyOBJ} ${PluginOBJ} ${Onvifobj})
 target_link_libraries(client ssl crypto avcodec avformat avutil swscale onvifdevice onvifcomm)
-
+#set_target_properties(onvifdevice PROPERTIES OUTPUT_NAME "onvifdevice")
+#install(TARGETS onvifdevice DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/build)   
 
 
 
