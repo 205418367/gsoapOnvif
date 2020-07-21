@@ -14,7 +14,7 @@
 #define RIGHT 3
 #define ZOOMIN 4
 #define ZOOMOUT 5
-#define speed 2
+#define speed 1
 #define GOTO 0
 #define SET 1
 #define REMOVE 2
