@@ -78,8 +78,8 @@ int OnvifDevice::ptzPreset(int command, string presetToken){
         std::string str="http://www.onvif.org/ver10/tptz/PanTiltSpaces/VelocityGenericSpace";
         preset.Speed->PanTilt->space =&str;
         preset.Speed->Zoom = soap_new_tt__Vector1D(proxyPTZ.soap, -1);
-        preset.Speed->PanTilt->x = -((float)speed / 1);
-        preset.Speed->PanTilt->y = 0;
+        //preset.Speed->PanTilt->x = -((float)speed / 1);
+        //preset.Speed->PanTilt->y = 0;
 
         result = proxyPTZ.GotoPreset(proxyPTZ.soap_endpoint,NULL,&preset, &response);
         if (SOAP_OK != result){
@@ -117,7 +117,7 @@ int OnvifDevice::ptzPreset(int command, string presetToken){
 **函数：ptzRelativeMove
 **功能：相机控制
 ************************************************************************/
-int OnvifDevice::ptzRelativeMove(int command){
+int OnvifDevice::ptzRelativeMove(int command,int speed){
     int result = 0;
     std::string strProfileToken;
     result = getProfile(strProfileToken);
@@ -189,7 +189,7 @@ int OnvifDevice::ptzRelativeMove(int command){
 **函数：ptzContinuousMove
 **功能：持续控制
 ************************************************************************/
-int OnvifDevice::ptzContinuousMove(int command){
+int OnvifDevice::ptzContinuousMove(int command,int speed){
     int result = 0;
     std::string strProfileToken;
     result = getProfile(strProfileToken);
@@ -218,26 +218,42 @@ int OnvifDevice::ptzContinuousMove(int command){
 
     switch (command){
     case LEFT:
-    	continuousMove.Velocity->PanTilt->x = -((float)speed / 1);
+    	continuousMove.Velocity->PanTilt->x = -((float)speed / 5);
     	continuousMove.Velocity->PanTilt->y = 0;
     	break;
     case RIGHT:
-    	continuousMove.Velocity->PanTilt->x = ((float)speed / 1);
+    	continuousMove.Velocity->PanTilt->x = ((float)speed / 5);
     	continuousMove.Velocity->PanTilt->y = 0;
     	break;
     case UP:
     	continuousMove.Velocity->PanTilt->x = 0;
-    	continuousMove.Velocity->PanTilt->y = ((float)speed / 1);
+    	continuousMove.Velocity->PanTilt->y = ((float)speed / 5);
     	break;
     case DOWN:
     	continuousMove.Velocity->PanTilt->x = 0;
-    	continuousMove.Velocity->PanTilt->y = -((float)speed / 1);
+    	continuousMove.Velocity->PanTilt->y = -((float)speed / 5);
+    	break;
+    case LEUP:
+    	continuousMove.Velocity->PanTilt->x = -((float)speed / 5);
+    	continuousMove.Velocity->PanTilt->y = ((float)speed / 5);
+    	break;
+    case LEDO:
+    	continuousMove.Velocity->PanTilt->x = -((float)speed / 5);
+    	continuousMove.Velocity->PanTilt->y = -((float)speed / 5);
+    	break;
+    case RIUP:
+    	continuousMove.Velocity->PanTilt->x = ((float)speed / 5);
+    	continuousMove.Velocity->PanTilt->y = ((float)speed / 5);
+    	break;
+    case RIDO:
+    	continuousMove.Velocity->PanTilt->x = ((float)speed / 5);
+    	continuousMove.Velocity->PanTilt->y = -((float)speed / 5);
     	break;
     case ZOOMIN:
-    	continuousMove.Velocity->Zoom->x = ((float)speed / 1);
+    	continuousMove.Velocity->Zoom->x = ((float)speed / 5);
     	break;
     case ZOOMOUT:
-    	continuousMove.Velocity->Zoom->x = -((float)speed / 1);
+    	continuousMove.Velocity->Zoom->x = -((float)speed / 5);
     	break;
     default:
     	break;
