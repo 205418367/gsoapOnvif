@@ -152,26 +152,42 @@ int OnvifDevice::ptzRelativeMove(int command,int speed){
 
     switch (command){
     case LEFT:
-        ptz_req.Translation->PanTilt->x = -((float)speed / 2);
+        ptz_req.Translation->PanTilt->x = -((float)speed / 5);
         ptz_req.Translation->PanTilt->y = 0;
         break;
     case RIGHT:
-        ptz_req.Translation->PanTilt->x = ((float)speed / 2);
+        ptz_req.Translation->PanTilt->x = ((float)speed / 5);
         ptz_req.Translation->PanTilt->y = 0;
         break;
     case UP:
         ptz_req.Translation->PanTilt->x = 0;
-        ptz_req.Translation->PanTilt->y = ((float)speed / 2);
+        ptz_req.Translation->PanTilt->y = ((float)speed / 5);
         break;
     case DOWN:
         ptz_req.Translation->PanTilt->x = 0;
-        ptz_req.Translation->PanTilt->y = -((float)speed / 2);
+        ptz_req.Translation->PanTilt->y = -((float)speed / 5);
         break;
+    case LEUP:
+    	continuousMove.Velocity->PanTilt->x = -((float)speed / 5);
+    	continuousMove.Velocity->PanTilt->y = ((float)speed / 5);
+    	break;
+    case LEDO:
+    	continuousMove.Velocity->PanTilt->x = -((float)speed / 5);
+    	continuousMove.Velocity->PanTilt->y = -((float)speed / 5);
+    	break;
+    case RIUP:
+    	continuousMove.Velocity->PanTilt->x = ((float)speed / 5);
+    	continuousMove.Velocity->PanTilt->y = ((float)speed / 5);
+    	break;
+    case RIDO:
+    	continuousMove.Velocity->PanTilt->x = ((float)speed / 5);
+    	continuousMove.Velocity->PanTilt->y = -((float)speed / 5);
+    	break;
     case ZOOMIN:
-        ptz_req.Translation->Zoom->x = ((float)speed / 2);
+        ptz_req.Translation->Zoom->x = ((float)speed / 5);
         break;
     case ZOOMOUT:
-        ptz_req.Translation->Zoom->x = -((float)speed / 2);
+        ptz_req.Translation->Zoom->x = -((float)speed / 5);
         break;
     default:
         break;
