@@ -14,7 +14,17 @@
 #define RIGHT 3
 #define ZOOMIN 4
 #define ZOOMOUT 5
-#define speed 1
+#define LEUP 6
+#define LEDO 7
+#define RIUP 8
+#define RIDO 9
+
+#define LOWER 1
+#define LOW 2
+#define MEDIUM 3
+#define FAST 4
+#define FASTER 5
+
 #define GOTO 0
 #define SET 1
 #define REMOVE 2
@@ -44,9 +54,9 @@ public:
 /************************************************************************
 **函数：ptzContinuousMove
 **功能：控制相机持续转动
-**command：UP DOWN LEFT RIGHT ZOOMIN ZOOMOUT speed 
+**command：UP DOWN LEFT RIGHT ZOOMIN ZOOMOUT
 ************************************************************************/
-  int ptzContinuousMove(int command);
+  int ptzContinuousMove(int command,int speed);
 
 /************************************************************************
 **函数：ptzContinuousStop
@@ -54,7 +64,7 @@ public:
 ************************************************************************/
   int ptzContinuousStop();
 
-  int ptzRelativeMove(int command);
+  int ptzRelativeMove(int command,int speed);
   int getProfile(string& profileToken);
   int getRTSPUrl(string& rtspUrl);
   int getIMAGEUrl(string& imageUrl);
