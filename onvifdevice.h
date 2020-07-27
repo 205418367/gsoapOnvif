@@ -14,10 +14,10 @@
 #define RIGHT 3
 #define ZOOMIN 4
 #define ZOOMOUT 5
-#define LEUP 6
-#define LEDO 7
-#define RIUP 8
-#define RIDO 9
+#define LEFTUP 6
+#define LEFTDOWN 7
+#define RIGHTUP 8
+#define RIGHTDOWN 9
 
 #define LOWER 1
 #define LOW 2
