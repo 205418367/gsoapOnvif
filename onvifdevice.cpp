@@ -167,21 +167,21 @@ int OnvifDevice::ptzRelativeMove(int command,int speed){
         ptz_req.Translation->PanTilt->x = 0;
         ptz_req.Translation->PanTilt->y = -((float)speed / 5);
         break;
-    case LEUP:
-    	continuousMove.Velocity->PanTilt->x = -((float)speed / 5);
-    	continuousMove.Velocity->PanTilt->y = ((float)speed / 5);
+    case LEFTUP:
+    	ptz_req.Translation->PanTilt->x  = -((float)speed / 5);
+    	ptz_req.Translation->PanTilt->y = ((float)speed / 5);
     	break;
-    case LEDO:
-    	continuousMove.Velocity->PanTilt->x = -((float)speed / 5);
-    	continuousMove.Velocity->PanTilt->y = -((float)speed / 5);
+    case LEFTDO:
+    	ptz_req.Translation->PanTilt->x  = -((float)speed / 5);
+    	ptz_req.Translation->PanTilt->y = -((float)speed / 5);
     	break;
-    case RIUP:
-    	continuousMove.Velocity->PanTilt->x = ((float)speed / 5);
-    	continuousMove.Velocity->PanTilt->y = ((float)speed / 5);
+    case RIGHTUP:
+    	ptz_req.Translation->PanTilt->x  = ((float)speed / 5);
+    	ptz_req.Translation->PanTilt->y = ((float)speed / 5);
     	break;
-    case RIDO:
-    	continuousMove.Velocity->PanTilt->x = ((float)speed / 5);
-    	continuousMove.Velocity->PanTilt->y = -((float)speed / 5);
+    case RIGHTDOWN:
+    	ptz_req.Translation->PanTilt->x  = ((float)speed / 5);
+    	ptz_req.Translation->PanTilt->y = -((float)speed / 5);
     	break;
     case ZOOMIN:
         ptz_req.Translation->Zoom->x = ((float)speed / 5);
@@ -249,19 +249,19 @@ int OnvifDevice::ptzContinuousMove(int command,int speed){
     	continuousMove.Velocity->PanTilt->x = 0;
     	continuousMove.Velocity->PanTilt->y = -((float)speed / 5);
     	break;
-    case LEUP:
+    case LEFTUP:
     	continuousMove.Velocity->PanTilt->x = -((float)speed / 5);
     	continuousMove.Velocity->PanTilt->y = ((float)speed / 5);
     	break;
-    case LEDO:
+    case LEFTDO:
     	continuousMove.Velocity->PanTilt->x = -((float)speed / 5);
     	continuousMove.Velocity->PanTilt->y = -((float)speed / 5);
     	break;
-    case RIUP:
+    case RIGHTUP:
     	continuousMove.Velocity->PanTilt->x = ((float)speed / 5);
     	continuousMove.Velocity->PanTilt->y = ((float)speed / 5);
     	break;
-    case RIDO:
+    case RIGHTDOWN:
     	continuousMove.Velocity->PanTilt->x = ((float)speed / 5);
     	continuousMove.Velocity->PanTilt->y = -((float)speed / 5);
     	break;
