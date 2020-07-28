@@ -54,7 +54,7 @@ public:
 /************************************************************************
 **函数：ptzContinuousMove
 **功能：控制相机持续转动
-**command：UP DOWN LEFT RIGHT ZOOMIN ZOOMOUT
+command：UP DOWN LEFT RIGHT LEFTUP LEFTDOWN RIGHTUP RIGHTDOWN ZOOMIN ZOOMOUT
 ************************************************************************/
   int ptzContinuousMove(int command,int speed);
 
@@ -68,6 +68,11 @@ public:
   int getProfile(string& profileToken);
   int getRTSPUrl(string& rtspUrl);
   int getIMAGEUrl(string& imageUrl);
+  /************************************************************************
+**函数：ptzPreset
+**功能：控制预置位
+presettoken: GOTO SET REMOVE
+************************************************************************/
   int ptzPreset(int command, string presettoken);
   int ptzPresetTour(vector<string> &PresetToken);
 private:
