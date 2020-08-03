@@ -171,7 +171,7 @@ int OnvifDevice::ptzRelativeMove(int command,int speed){
     	ptz_req.Translation->PanTilt->x  = -((float)speed / 5);
     	ptz_req.Translation->PanTilt->y = ((float)speed / 5);
     	break;
-    case LEFTDO:
+    case LEFTDOWN:
     	ptz_req.Translation->PanTilt->x  = -((float)speed / 5);
     	ptz_req.Translation->PanTilt->y = -((float)speed / 5);
     	break;
@@ -253,7 +253,7 @@ int OnvifDevice::ptzContinuousMove(int command,int speed){
     	continuousMove.Velocity->PanTilt->x = -((float)speed / 5);
     	continuousMove.Velocity->PanTilt->y = ((float)speed / 5);
     	break;
-    case LEFTDO:
+    case LEFTDOWN:
     	continuousMove.Velocity->PanTilt->x = -((float)speed / 5);
     	continuousMove.Velocity->PanTilt->y = -((float)speed / 5);
     	break;
