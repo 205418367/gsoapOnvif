@@ -1,6 +1,9 @@
-#include "onvifdevice.h"
+#include "OnvifPTZ.h"
+#include "OnvifImaging.h"
 #include <unistd.h>
+#include <vector>
 
+using namespace std;
 int main(){ 
     //vector<string> addr;
     //detectDevice(addr);
@@ -13,35 +16,21 @@ int main(){
 
         //cout<<"####"<<*it<<"####"<<endl;
         string it = "http://192.168.8.220/onvif/device_service";
-        OnvifDevice onvifDevice(it, "admin", "leinao123");
+        string user = "admin";
+        string pass = "leinao123"
+        OnvifPTZ OnvifPTZ(it, user, pass);
 
-        ImagingSet imageSet;
-        onvifDevice.SetImagingSettings();
-        onvifDevice.GetImagingSettings(imageSet);
-        cout<<"ExposureTime: "<<imageSet.ExposureTime<<endl;
-        
-        //string videoSourceToken;
-        //onvifDevice.GetVideoSources(videoSourceToken);
-        //cout<<"video :"<<videoSourceToken<<endl;
-        //onvifDevice.ContinuousFocusMove(0.1);
-        //sleep(2);
-        //onvifDevice.ContinuousFocusStop();
-
-        //onvifDevice.ptzContinuousMove(LEFT,MEDIUM);
-        //onvifDevice.ptzContinuousStop();
-	//onvifDevice.ptzRelativeMove(LEFT);
-
-        //sleep(3);
-	//onvifDevice.ptzPreset(SET,"1");
-	//onvifDevice.ptzPreset(GOTO,"1");
-        
-        //onvifDevice.SetPreset("1","test");
-        //float x,y,z;string prename;
-        //onvifDevice.GetOnePresets("3",x,y,z,prename);
-        //cout<<"x :"<<x<<endl;
-
+        int speed;
+        OnvifPTZ.setPtzMoveSpeed(2);
+        OnvifPTZ.getPtzMoveSpeed(speed);
+        cout<<"speed: "<<speed<<endl;
+        //ImagingSet imageSet;
+        //OnvifPTZ.ptzContinuousMove(LEFT);
+        //OnvifPTZ.ptzContinuousStop();
+	//OnvifPTZ.ptzRelativeMove(LEFT);
+        //OnvifPTZ.SetPreset("2","onvif");
         //vector<PreInfo> allpresets;
-        //onvifDevice.GetAllPresets(allpresets);
+        //OnvifPTZ.GetAllPresets(allpresets);
         //for (int i=0;i<allpresets.size();i++){
             //PreInfo preset = allpresets[i];
 	    //cout<<"name :"<<preset.name<<endl;
@@ -50,5 +39,20 @@ int main(){
             //cout<<"t :"<<preset.t<<endl;
             //cout<<"z :"<<preset.z<<endl;
         //}
+
+        OnvifImaging Imaging(it, user, pass);
+        ImagingSet imageSet;
+        Imaging.GetImagingSettings(imageSet);
+        cout<<"ExposureTime: "<<imageSet.ExposureTime<<endl;
+      
+        //onvifDevice.SetImagingSettings();
+        
+        
+        //string videoSourceToken;
+        //onvifDevice.GetVideoSources(videoSourceToken);
+        //cout<<"video :"<<videoSourceToken<<endl;
+        //onvifDevice.ContinuousFocusMove(0.1);
+        //sleep(2);
+        //onvifDevice.ContinuousFocusStop();
     return 0;
 }

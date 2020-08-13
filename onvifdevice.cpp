@@ -1,9 +1,5 @@
 #include "onvifdevice.h"
-#include "stdio.h"
-#include "wsdd.nsmap"
 #include "wsseapi.h"
-#include "wsaapi.h"
-#include "ErrorLog.h"
 #include "soapDeviceBindingProxy.h"
 #include "soapMediaBindingProxy.h"
 #include "soapPTZBindingProxy.h"
@@ -22,7 +18,28 @@ OnvifDevice::OnvifDevice(string url,string username,string passwd):m_deviceurl(u
 OnvifDevice::~OnvifDevice(){}
 
 
-int OnvifDevice::ContinuousFocusMove(float speed){
+int OnvifDevice::setPtzMoveSpeed(const int& speed){
+    ptzMoveSpeed = speed;
+    return 0;
+}
+
+int OnvifDevice::getPtzMoveSpeed(int& speed){
+    speed = ptzMoveSpeed;
+    return 0;
+}
+
+int OnvifDevice::setFocusMoveSpeed(const int& speed){
+    focusMoveSpeed = speed;
+    return 0;
+}
+
+int OnvifDevice::getFocusMoveSpeed(int& speed){
+    speed = focusMoveSpeed;
+    return 0;
+}
+
+
+int OnvifDevice::ContinuousFocusMove(int command){
     ImagingBindingProxy proxyImaging;
     proxyImaging.soap_endpoint = imageUrl.c_str();
     soap_register_plugin(proxyImaging.soap, soap_wsse);
@@ -34,7 +51,14 @@ int OnvifDevice::ContinuousFocusMove(float speed){
     imaging.VideoSourceToken = videoSourceToken;
     imaging.Focus = soap_new_tt__FocusMove(proxyImaging.soap, -1);
     imaging.Focus->Continuous = soap_new_tt__ContinuousFocus(proxyImaging.soap, -1); 
-    imaging.Focus->Continuous->Speed = speed;
+    switch (command){
+    case FOCUSIN:
+         imaging.Focus->Continuous->Speed = -((float)focusMoveSpeed/10);
+         break;
+    case FOCUSOUT:
+         imaging.Focus->Continuous->Speed = ((float)focusMoveSpeed/10);
+         break;
+    }
     int result = proxyImaging.Move(proxyImaging.soap_endpoint, NULL, &imaging, &response);
     if (SOAP_OK != result){
        return -1;
@@ -104,7 +128,6 @@ int OnvifDevice::SetImagingSettings(){
     _timg__SetImagingSettings           imaging;
     _timg__SetImagingSettingsResponse   response;
     imaging.VideoSourceToken = videoSourceToken;
-   
     imaging.ImagingSettings = soap_new_tt__ImagingSettings20(proxyImaging.soap, -1);
     //imaging.ImagingSettings->Brightness = &Brightness;
     //imaging.ImagingSettings->ColorSaturation = &ColorSaturation;
@@ -301,42 +324,42 @@ int OnvifDevice::ptzRelativeMove(int command){
 
     switch (command){
     case LEFT:
-        ptz_req.Translation->PanTilt->x = -(1.0 / 5);
+        ptz_req.Translation->PanTilt->x = -((float)ptzMoveSpeed / 7);
         ptz_req.Translation->PanTilt->y = 0;
         break;
     case RIGHT:
-        ptz_req.Translation->PanTilt->x = (1.0 / 5);
+        ptz_req.Translation->PanTilt->x = ((float)ptzMoveSpeed / 7);
         ptz_req.Translation->PanTilt->y = 0;
         break;
     case UP:
         ptz_req.Translation->PanTilt->x = 0;
-        ptz_req.Translation->PanTilt->y = (1.0 / 5);
+        ptz_req.Translation->PanTilt->y = ((float)ptzMoveSpeed / 7);
         break;
     case DOWN:
         ptz_req.Translation->PanTilt->x = 0;
-        ptz_req.Translation->PanTilt->y = -(1.0 / 5);
+        ptz_req.Translation->PanTilt->y = -((float)ptzMoveSpeed / 7);
         break;
     case LEFTUP:
-    	ptz_req.Translation->PanTilt->x = -(1.0 / 5);
-    	ptz_req.Translation->PanTilt->y = (1.0 / 5);
+    	ptz_req.Translation->PanTilt->x = -((float)ptzMoveSpeed / 7);
+    	ptz_req.Translation->PanTilt->y = ((float)ptzMoveSpeed / 7);
     	break;
     case LEFTDOWN:
-    	ptz_req.Translation->PanTilt->x = -(1.0 / 5);
-    	ptz_req.Translation->PanTilt->y = -(1.0 / 5);
+    	ptz_req.Translation->PanTilt->x = -((float)ptzMoveSpeed / 7);
+    	ptz_req.Translation->PanTilt->y = -((float)ptzMoveSpeed / 7);
     	break;
     case RIGHTUP:
-    	ptz_req.Translation->PanTilt->x = (1.0 / 5);
-    	ptz_req.Translation->PanTilt->y = (1.0 / 5);
+    	ptz_req.Translation->PanTilt->x = ((float)ptzMoveSpeed / 7);
+    	ptz_req.Translation->PanTilt->y = ((float)ptzMoveSpeed / 7);
     	break;
     case RIGHTDOWN:
-    	ptz_req.Translation->PanTilt->x = (1.0 / 5);
-    	ptz_req.Translation->PanTilt->y = -(1.0 / 5);
+    	ptz_req.Translation->PanTilt->x = ((float)ptzMoveSpeed / 7);
+    	ptz_req.Translation->PanTilt->y = -((float)ptzMoveSpeed / 7);
     	break;
     case ZOOMIN:
-        ptz_req.Translation->Zoom->x = (1.0 / 5);
+        ptz_req.Translation->Zoom->x = ((float)ptzMoveSpeed / 7);
         break;
     case ZOOMOUT:
-        ptz_req.Translation->Zoom->x = -(1.0 / 5);
+        ptz_req.Translation->Zoom->x = -((float)ptzMoveSpeed / 7);
         break;
     default:
         break;
@@ -350,7 +373,7 @@ int OnvifDevice::ptzRelativeMove(int command){
 }
 
 
-int OnvifDevice::ptzContinuousMove(int command,int speed){
+int OnvifDevice::ptzContinuousMove(int command){
     PTZBindingProxy proxyPTZ;
     proxyPTZ.soap_endpoint = PTZAddr.c_str();
     soap_register_plugin(proxyPTZ.soap, soap_wsse);
@@ -368,42 +391,42 @@ int OnvifDevice::ptzContinuousMove(int command,int speed){
 
     switch (command){
     case LEFT:
-    	continuousMove.Velocity->PanTilt->x = -((float)speed / 5);
+    	continuousMove.Velocity->PanTilt->x = -((float)ptzMoveSpeed / 7);
     	continuousMove.Velocity->PanTilt->y = 0;
     	break;
     case RIGHT:
-    	continuousMove.Velocity->PanTilt->x = ((float)speed / 5);
+    	continuousMove.Velocity->PanTilt->x = ((float)ptzMoveSpeed / 7);
     	continuousMove.Velocity->PanTilt->y = 0;
     	break;
     case UP:
     	continuousMove.Velocity->PanTilt->x = 0;
-    	continuousMove.Velocity->PanTilt->y = ((float)speed / 5);
+    	continuousMove.Velocity->PanTilt->y = ((float)ptzMoveSpeed / 7);
     	break;
     case DOWN:
     	continuousMove.Velocity->PanTilt->x = 0;
-    	continuousMove.Velocity->PanTilt->y = -((float)speed / 5);
+    	continuousMove.Velocity->PanTilt->y = -((float)ptzMoveSpeed / 7);
     	break;
     case LEFTUP:
-    	continuousMove.Velocity->PanTilt->x = -((float)speed / 5);
-    	continuousMove.Velocity->PanTilt->y = ((float)speed / 5);
+    	continuousMove.Velocity->PanTilt->x = -((float)ptzMoveSpeed / 7);
+    	continuousMove.Velocity->PanTilt->y = ((float)ptzMoveSpeed / 7);
     	break;
     case LEFTDOWN:
-    	continuousMove.Velocity->PanTilt->x = -((float)speed / 5);
-    	continuousMove.Velocity->PanTilt->y = -((float)speed / 5);
+    	continuousMove.Velocity->PanTilt->x = -((float)ptzMoveSpeed / 7);
+    	continuousMove.Velocity->PanTilt->y = -((float)ptzMoveSpeed / 7);
     	break;
     case RIGHTUP:
-    	continuousMove.Velocity->PanTilt->x = ((float)speed / 5);
-    	continuousMove.Velocity->PanTilt->y = ((float)speed / 5);
+    	continuousMove.Velocity->PanTilt->x = ((float)ptzMoveSpeed / 7);
+    	continuousMove.Velocity->PanTilt->y = ((float)ptzMoveSpeed / 7);
     	break;
     case RIGHTDOWN:
-    	continuousMove.Velocity->PanTilt->x = ((float)speed / 5);
-    	continuousMove.Velocity->PanTilt->y = -((float)speed / 5);
+    	continuousMove.Velocity->PanTilt->x = ((float)ptzMoveSpeed / 7);
+    	continuousMove.Velocity->PanTilt->y = -((float)ptzMoveSpeed / 7);
     	break;
     case ZOOMIN:
-    	continuousMove.Velocity->Zoom->x = ((float)speed / 5);
+    	continuousMove.Velocity->Zoom->x = ((float)ptzMoveSpeed / 7);
     	break;
     case ZOOMOUT:
-    	continuousMove.Velocity->Zoom->x = -((float)speed / 5);
+    	continuousMove.Velocity->Zoom->x = -((float)ptzMoveSpeed / 7);
     	break;
     default:
     	break;

@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
-#include "soapPrint.h"
 
 //控制方位
 #define UP 0
@@ -20,13 +19,8 @@
 #define RIGHTDOWN 7
 #define ZOOMIN 8
 #define ZOOMOUT 9
-
-//控制速度
-#define LOWER 1
-#define LOW 2
-#define MEDIUM 3
-#define FAST 4
-#define FASTER 5
+#define FOCUSIN 10
+#define FOCUSOUT 11
 
 //预置点位
 #define GOTO 0
@@ -67,11 +61,14 @@ class OnvifDevice{
 public:
   OnvifDevice(string url,string username,string passwd);
   ~OnvifDevice();
+
   int getMediaUrl(string& mediaAddr);
   int getProfile(string& profileToken);
   int getPTZUrl(string& PTZAddr);
   int GetVideoSources(string& videoSourceToken);
   int GetSnapshotUri(string& shotUri);
+  int getRTSPUrl(string& rtspUrl);
+  int getIMAGEUrl(string& imageUrl);
 
   //功能: 获取设备时间
   int getDateTime(int& year, int& month, int& day,
@@ -81,16 +78,16 @@ public:
   //功能: 获取设备信息
   int getDeviceInformation(string& Manufacturer,string& Model,
            string& FirmwareVersion,string& SerialNumber,string& HardwareId);
-  //功能: 获取RTSP地址
-  int getRTSPUrl(string& rtspUrl);
-  //功能: 获取抓图地址
-  int getIMAGEUrl(string& imageUrl);
 
   //功能：控制相机持续转动; 停止相机需要调用ptzContinuousStop接口
   // speed:LOWER LOW MEDIUM FAST FASTER
   // command:UP DOWN LEFT RIGHT LEFTUP LEFTDOWN RIGHTUP RIGHTDOWN ZOOMIN ZOOMOUT
-  int ptzContinuousMove(int command,int speed);
+  int ptzContinuousMove(int command);
   int ptzContinuousStop();
+  // 1< speed <7
+  int getPtzMoveSpeed(int& speed);
+  int setPtzMoveSpeed(const int& speed);
+
   //功能：控制相机转动一定角度,转动完毕会自动停止
   // command:UP DOWN LEFT RIGHT LEFTUP LEFTDOWN RIGHTUP RIGHTDOWN ZOOMIN ZOOMOUT
   int ptzRelativeMove(int command);
@@ -103,16 +100,21 @@ public:
   int GetAllPresets(vector<PreInfo>& allpresets);
   //功能：设置预置点位。presetToken:1~300 ; presetName:name
   int SetPreset(string presetToken,string presetName);
-  //功能：Continuous Focus Move; -1< speed <1
-  int ContinuousFocusMove(float speed);
+  //功能：Continuous Focus Move command:FOCUSIN FOCUSOUT
+  int ContinuousFocusMove(int command);
   //功能：Continuous Focus Stop
   int ContinuousFocusStop();
+  // 1< speed <10
+  int getFocusMoveSpeed(int& speed);
+  int setFocusMoveSpeed(const int& speed);
+
   //功能：复位
   int GotoHomePosition();
   //功能：设置ImagingSettings
   int SetImagingSettings();
   //功能：获取ImagingSettings
   int GetImagingSettings(ImagingSet& imageSet);
+  
 private:
   string m_deviceurl;
   string m_username;
@@ -123,6 +125,8 @@ private:
   string strProfileToken;
   string videoSourceToken;
 
+  int ptzMoveSpeed = 3;
+  int focusMoveSpeed = 5;
   float Brightness = 50.0;
   float ColorSaturation = 35.0;
   float Contrast = 25.0;
