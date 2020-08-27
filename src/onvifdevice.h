@@ -95,7 +95,7 @@ public:
   //功能：控制预置位; command: GOTO REMOVE presettoken:1~300
   int ptzPreset(int command, string presettoken);
   //功能：根据预置点token查询name和position
-  int GetOnePresets(const string& pretoken,float& x,float& y,float& z,string& prename);
+  int GetOnePresets(const string& pretoken,string& prename,float& p,float& t,float& z);
   //功能：查询所有已设置的预置点token、name和ptz值
   int GetAllPresets(vector<PreInfo>& allpresets);
   //功能：设置预置点位。presetToken:1~300 ; presetName:name

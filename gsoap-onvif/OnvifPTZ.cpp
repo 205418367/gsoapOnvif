@@ -23,7 +23,7 @@ int OnvifPTZ::getPtzMoveSpeed(int& speed){
 }
 
 
-int OnvifPTZ::GetOnePresets(const std::string& pretoken,float& x,float& y,float& z,std::string& prename){  
+int OnvifDevice::GetOnePresets(const string& pretoken,string& prename,float& p,float& t,float& z){  
     PTZBindingProxy proxyPTZ;
     proxyPTZ.soap_endpoint = PTZAddr.c_str();
     soap_register_plugin(proxyPTZ.soap, soap_wsse);
@@ -38,14 +38,14 @@ int OnvifPTZ::GetOnePresets(const std::string& pretoken,float& x,float& y,float&
        return -1;
     }
     for (int i = 0;i<response.Preset.size();i++){
-        std::string *name = response.Preset[i]->Name;
-	std::string *token = response.Preset[i]->token;
+        string *name = response.Preset[i]->Name;
+	string *token = response.Preset[i]->token;
 	if (((*token)==pretoken)){
 	   tt__Vector2D* PanTilt = response.Preset[i]->PTZPosition->PanTilt;
 	   tt__Vector1D* Zoom = response.Preset[i]->PTZPosition->Zoom;
-           prename = *name;
-	   x = PanTilt->x;
-	   y = PanTilt->y;
+           prename = (*name).erase(0, 2);
+	   p = PanTilt->x;
+	   t = PanTilt->y;
            z = Zoom->x;
 	}
     }
@@ -71,16 +71,22 @@ int OnvifPTZ::GetAllPresets(std::vector<PreInfo>& allpresets){
     for (int i = 0;i<response.Preset.size();i++){
 	std::string *name = response.Preset[i]->Name;
 	std::string *token = response.Preset[i]->token;
-	if (!(*name).find("PR")){
-           tt__Vector2D* PanTilt = response.Preset[i]->PTZPosition->PanTilt;
-	   tt__Vector1D* Zoom = response.Preset[i]->PTZPosition->Zoom;
-           float x = PanTilt->x;
-	   float y = PanTilt->y;
-           float z = Zoom->x;
+        
+	if ((*name).find("PR") != std::string::npos){
+           tt__Vector2D* panTilt = response.Preset[i]->PTZPosition->PanTilt;
+	   tt__Vector1D* zoom = response.Preset[i]->PTZPosition->Zoom;
+           std::cout<<"name: "<<*name<<std::endl;
+        std::cout<<"token: "<<*token<<std::endl;
+           float x = panTilt->x;
+           std::cout<<"x: "<<x<<std::endl;
+	   float y = panTilt->y;
+           std::cout<<"y: "<<x<<std::endl;
+           float z = zoom->x;
+           std::cout<<"z: "<<x<<std::endl;
 
            PreInfo preinfo;
 	   preinfo.token = *token;
-           preinfo.name = *name;
+           preinfo.name = *name.erase(0, 2);
            preinfo.p = x;
            preinfo.t = y;
            preinfo.z = z;
