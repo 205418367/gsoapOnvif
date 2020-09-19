@@ -444,11 +444,9 @@ int OnvifDevice::ptzContinuousMove(int command){
     PTZBindingProxy proxyPTZ;
     proxyPTZ.soap_endpoint = PTZAddr.c_str();
     soap_register_plugin(proxyPTZ.soap, soap_wsse);
-    SM_Trace("########## done! ############### %s", "TEST1");
     if (SOAP_OK != soap_wsse_add_UsernameTokenDigest(proxyPTZ.soap, NULL,  m_username.c_str(), m_passwd.c_str())){
         return -1;
     }
-    SM_Trace("########## done! ############### %s", "TEST2");
     _tptz__ContinuousMove continuousMove;
     _tptz__ContinuousMoveResponse response;
     continuousMove.ProfileToken = strProfileToken;
